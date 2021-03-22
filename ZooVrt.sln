@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZooVrt", "ZooVrt\ZooVrt.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZooVrt.Domain", "ZooVrt.Domain\ZooVrt.Domain.csproj", "{2DFAC542-8AC5-4C00-954F-E1B1983E9096}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZooVrt.Persistance", "ZooVrt.Persistance\ZooVrt.Persistance.csproj", "{13FF86E8-CE17-455C-9D78-EE4B663E2CCF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2DFAC542-8AC5-4C00-954F-E1B1983E9096}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DFAC542-8AC5-4C00-954F-E1B1983E9096}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DFAC542-8AC5-4C00-954F-E1B1983E9096}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13FF86E8-CE17-455C-9D78-EE4B663E2CCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13FF86E8-CE17-455C-9D78-EE4B663E2CCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13FF86E8-CE17-455C-9D78-EE4B663E2CCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13FF86E8-CE17-455C-9D78-EE4B663E2CCF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
