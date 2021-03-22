@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZooVrt.Persistance.Database;
 
 namespace ZooVrt.Persistance.Migrations
 {
     [DbContext(typeof(ZooVrtContext))]
-    partial class ZooVrtContextModelSnapshot : ModelSnapshot
+    [Migration("20210322201534_UpdatedEntities2")]
+    partial class UpdatedEntities2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,16 +138,14 @@ namespace ZooVrt.Persistance.Migrations
                             Id = 1,
                             Kapacitet = 7,
                             M = 3,
-                            N = 3,
-                            Naziv = "Prvi"
+                            N = 3
                         },
                         new
                         {
                             Id = 2,
                             Kapacitet = 9,
                             M = 3,
-                            N = 4,
-                            Naziv = "Drugi"
+                            N = 4
                         });
                 });
 

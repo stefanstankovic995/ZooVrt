@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ZooVrt.Common.Models;
 using ZooVrt.Domain.Entities;
 using ZooVrt.Persistance.Database;
 
@@ -14,22 +16,32 @@ namespace ZooVrt.API.Controllers
     public class TipStanistaController : Controller
     {
         public ZooVrtContext Context { get; set; }
+        private readonly IMapper _mapper;
+
+        public TipStanistaController(ZooVrtContext context, IMapper mapper)
+        {
+            Context = context;
+            _mapper = mapper;
+        }
+
 
         [HttpGet]
-        public async Task<List<TipStanista>> GetAll()
+        public async Task<List<TipStanistaModel>> GetAll()
         {
-            return await Context.TipoviStanista
+            var rez = await Context.TipoviStanista
                 .ToListAsync();
+
+            return _mapper.Map<List<TipStanistaModel>>(rez); ;
         }
 
         [HttpPost]
-        public async Task<int> Add([FromBody] TipStanista tipStanista)
+        public async Task<IActionResult> Add([FromBody] TipStanistaModel tipStanista)
         {
             Context.TipoviStanista
-                .Add(tipStanista);
+                .Add(_mapper.Map<TipStanista>(tipStanista));
             await Context.SaveChangesAsync();
 
-            return tipStanista.Id;
+            return Ok();
         }
 
         [Route("{id}")]

@@ -12,7 +12,7 @@ namespace ZooVrt.Persistance.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true)
+                    Naziv = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -45,7 +45,8 @@ namespace ZooVrt.Persistance.Migrations
                     Vrsta = table.Column<string>(nullable: true),
                     Zbir = table.Column<int>(nullable: false),
                     StanisteId = table.Column<int>(nullable: false),
-                    ZooVrtId = table.Column<int>(nullable: false)
+                    ZooVrtId = table.Column<int>(nullable: false),
+                    ZooVrtId1 = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -55,13 +56,19 @@ namespace ZooVrt.Persistance.Migrations
                         column: x => x.StanisteId,
                         principalTable: "TipoviStanista",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Lokacije_ZooVrt_ZooVrtId",
                         column: x => x.ZooVrtId,
                         principalTable: "ZooVrt",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Lokacije_ZooVrt_ZooVrtId1",
+                        column: x => x.ZooVrtId1,
+                        principalTable: "ZooVrt",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -73,6 +80,11 @@ namespace ZooVrt.Persistance.Migrations
                 name: "IX_Lokacije_ZooVrtId",
                 table: "Lokacije",
                 column: "ZooVrtId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Lokacije_ZooVrtId1",
+                table: "Lokacije",
+                column: "ZooVrtId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

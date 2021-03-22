@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ZooVrt.Common.Models;
 using ZooVrt.Domain.Entities;
 using ZooVrt.Persistance.Database;
 
@@ -14,40 +16,37 @@ namespace ZooVrt.API.Controllers
     public class ZooVrtController : ControllerBase
     {
         public ZooVrtContext Context { get; set; }
+        private readonly IMapper _mapper;
 
-        public ZooVrtController(ZooVrtContext context)
+        public ZooVrtController(ZooVrtContext context, IMapper mapper)
         {
             Context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<List<Domain.Entities.ZooVrt>> GetAll()
+        public async Task<List<ZooModel>> GetAll()
         {
-            return await Context.ZooVrt
+            var rez = await Context.ZooVrt
                 .Include(x => x.Lokacije)
                     .ThenInclude(x => x.Staniste)
                 .ToListAsync();
+            return _mapper.Map<List<ZooModel>>(rez); ;
         }
 
         [Route("DodajVrt")]
         [HttpPost]
-        public async Task Add([FromBody] Domain.Entities.ZooVrt zooVrt)
+        public async Task Add([FromBody] ZooModel zooVrt)
         {
             Context.ZooVrt
-                .Add(zooVrt);
+                .Add(_mapper.Map<Domain.Entities.ZooVrt>(zooVrt));
             await Context.SaveChangesAsync();
         }
 
         [HttpPut]
-        public async Task Update([FromBody] Domain.Entities.ZooVrt zooVrt)
+        public async Task Update([FromBody] ZooModel zooVrt)
         {
-            //var stariVrt = await Context.Vrtovi.FindAsync(vrt.ID);
-            //stariVrt.Kapacitet = vrt.Kapacitet;
-            //stariVrt.Naziv = vrt.Naziv;
-            //stariVrt.M = vrt.M;
-            //stariVrt.N = vrt.N;
-
-            Context.Update<Domain.Entities.ZooVrt>(zooVrt);
+            Context.Update<Domain.Entities.ZooVrt>(_mapper.Map<Domain.Entities.ZooVrt>(zooVrt));
             await Context.SaveChangesAsync();
         }
 

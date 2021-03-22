@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ZooVrt.Domain.Entities;
+using ZooVrt.Persistance.EntityConfigurations;
 
 namespace ZooVrt.Persistance.Database
 {
@@ -10,7 +11,9 @@ namespace ZooVrt.Persistance.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            modelBuilder.ApplyConfiguration(new TipStanistaConfiguration());
+            modelBuilder.ApplyConfiguration(new ZooVrtConfiguration());
+            modelBuilder.ApplyConfiguration(new LokacijaConfiguration());
         }
 
         public DbSet<Lokacija> Lokacije { get; set; }

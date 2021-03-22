@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZooVrt.Persistance.Database;
 
 namespace ZooVrt.Persistance.Migrations
 {
     [DbContext(typeof(ZooVrtContext))]
-    partial class ZooVrtContextModelSnapshot : ModelSnapshot
+    [Migration("20210322200123_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,28 +58,6 @@ namespace ZooVrt.Persistance.Migrations
                     b.HasIndex("ZooVrtId1");
 
                     b.ToTable("Lokacije");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            StanisteId = 1,
-                            Vrsta = "Tigar",
-                            X = 0,
-                            Y = 0,
-                            Zbir = 5,
-                            ZooVrtId = 2
-                        },
-                        new
-                        {
-                            Id = 2,
-                            StanisteId = 2,
-                            Vrsta = "Macka",
-                            X = 0,
-                            Y = 1,
-                            Zbir = 3,
-                            ZooVrtId = 2
-                        });
                 });
 
             modelBuilder.Entity("ZooVrt.Domain.Entities.TipStanista", b =>
@@ -93,18 +73,6 @@ namespace ZooVrt.Persistance.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TipoviStanista");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Naziv = "Tundra"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Naziv = "Savana"
-                        });
                 });
 
             modelBuilder.Entity("ZooVrt.Domain.Entities.ZooVrt", b =>
@@ -123,30 +91,9 @@ namespace ZooVrt.Persistance.Migrations
                     b.Property<int>("N")
                         .HasColumnType("int");
 
-                    b.Property<string>("Naziv")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("ZooVrt");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Kapacitet = 7,
-                            M = 3,
-                            N = 3,
-                            Naziv = "Prvi"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Kapacitet = 9,
-                            M = 3,
-                            N = 4,
-                            Naziv = "Drugi"
-                        });
                 });
 
             modelBuilder.Entity("ZooVrt.Domain.Entities.Lokacija", b =>
