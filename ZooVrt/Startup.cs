@@ -6,12 +6,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
+using ZooVrt.Persistance.Database;
 
-namespace ZooVrt
+namespace ZooVrt.API
 {
     public class Startup
     {
@@ -26,6 +29,13 @@ namespace ZooVrt
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<ZooVrtContext>(builder => builder.UseSqlServer(Configuration.GetConnectionString("Database")));
+
+            services.AddSwaggerGen(x => 
+            {
+                x.SwaggerDoc("v1", new OpenApiInfo { Title = "ZooVrt", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,6 +47,14 @@ namespace ZooVrt
             }
 
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(x =>
+            {
+                x.SwaggerEndpoint("/swagger/v1/swagger.json", "ZooVrt V1");
+                x.RoutePrefix = string.Empty;
+            });
 
             app.UseRouting();
 
