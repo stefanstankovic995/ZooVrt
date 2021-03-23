@@ -9,7 +9,7 @@ export class Lokacija {
 		this.zbir = zbir;
         this.maxZbir = maxZbir;
 		if(staniste){
-			this.staniste = new TipStanista(lokacija.staniste);
+			this.staniste = new TipStanista(staniste);
 		}
 		else{
 			this.staniste = staniste
@@ -19,16 +19,9 @@ export class Lokacija {
 	crtaj(host) {
         let glavni = document.createElement("div");
         glavni.className = "lok";
-        glavni.innerHTML = "Prazno, " + this.zbir + ", (" + this.maxZbir + ")";
-        glavni.style.backgroundColor = this.vratiBoju();
+        glavni.innerHTML = this.vrsta + ", " + this.zbir;
+        glavni.style.backgroundColor = this.staniste ? this.staniste.boja : "grey";
         host.appendChild(glavni);
 
-    }
-	
-	vratiBoju() {
-        if (!this.tip)
-            return "pink";
-        else
-            return "blue";
     }
 }

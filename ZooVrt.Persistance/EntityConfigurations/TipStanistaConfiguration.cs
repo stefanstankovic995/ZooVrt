@@ -18,12 +18,14 @@ namespace ZooVrt.Persistance.EntityConfigurations
                 new TipStanista()
                 {
                     Id = 1,
-                    Naziv = "Tundra"
+                    Naziv = "Tundra",
+                    Boja = "#b30000"
                 },
                 new TipStanista()
                 {
                     Id = 2,
-                    Naziv = "Savana"
+                    Naziv = "Savana",
+                    Boja = "#80ff00"
                 });
         }
     }

@@ -25,6 +25,7 @@ namespace ZooVrt.Persistance.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Naziv = table.Column<string>(nullable: true),
                     N = table.Column<int>(nullable: false),
                     M = table.Column<int>(nullable: false),
                     Kapacitet = table.Column<int>(nullable: false)
@@ -45,8 +46,7 @@ namespace ZooVrt.Persistance.Migrations
                     Vrsta = table.Column<string>(nullable: true),
                     Zbir = table.Column<int>(nullable: false),
                     StanisteId = table.Column<int>(nullable: false),
-                    ZooVrtId = table.Column<int>(nullable: false),
-                    ZooVrtId1 = table.Column<int>(nullable: true)
+                    ZooVrtId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -63,13 +63,35 @@ namespace ZooVrt.Persistance.Migrations
                         principalTable: "ZooVrt",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Lokacije_ZooVrt_ZooVrtId1",
-                        column: x => x.ZooVrtId1,
-                        principalTable: "ZooVrt",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.InsertData(
+                table: "TipoviStanista",
+                columns: new[] { "Id", "Naziv" },
+                values: new object[,]
+                {
+                    { 1, "Tundra" },
+                    { 2, "Savana" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ZooVrt",
+                columns: new[] { "Id", "Kapacitet", "M", "N", "Naziv" },
+                values: new object[,]
+                {
+                    { 1, 7, 3, 3, "Prvi" },
+                    { 2, 9, 3, 4, "Drugi" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Lokacije",
+                columns: new[] { "Id", "StanisteId", "Vrsta", "X", "Y", "Zbir", "ZooVrtId" },
+                values: new object[] { 1, 1, "Tigar", 0, 0, 5, 2 });
+
+            migrationBuilder.InsertData(
+                table: "Lokacije",
+                columns: new[] { "Id", "StanisteId", "Vrsta", "X", "Y", "Zbir", "ZooVrtId" },
+                values: new object[] { 2, 2, "Macka", 0, 1, 3, 2 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Lokacije_StanisteId",
@@ -80,11 +102,6 @@ namespace ZooVrt.Persistance.Migrations
                 name: "IX_Lokacije_ZooVrtId",
                 table: "Lokacije",
                 column: "ZooVrtId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Lokacije_ZooVrtId1",
-                table: "Lokacije",
-                column: "ZooVrtId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

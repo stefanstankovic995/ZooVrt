@@ -1,15 +1,21 @@
-import { Zoo } from "./zooVrt.js"
+import { Zoo } from './zooVrt.js';
+import { TipStanista } from './tipStanista.js';
 
-fetch("https://localhost:44348/TipStanista/").then(p => {
+const refreshData = () => {
+	document.body.innerHTML = '';
+	fetch("https://localhost:44348/TipStanista/").then(p => {
     p.json().then(data => {
-        var stanista = data.map(x => x.naziv);
+        var staniste = data.map(x => new TipStanista(x));
 		fetch("https://localhost:44348/ZooVrt/").then(p => {
-    p.json().then(data => {
+			p.json().then(data => {
         data.forEach(zoo => {
-            const zooVrt = new Zoo(zoo, stanista);
+            const zooVrt = new Zoo(zoo, staniste, refreshData);
 			zooVrt.crtaj(document.body);
         });
     });
 });
     });
 });
+}
+
+refreshData();

@@ -17,7 +17,7 @@ namespace ZooVrt.Persistance.EntityConfigurations
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.ZooVrt)
-                .WithMany()
+                .WithMany(x => x.Lokacije)
                 .HasForeignKey(x => x.ZooVrtId)
                 .OnDelete(DeleteBehavior.Cascade);
 

@@ -61,50 +61,50 @@ namespace ZooVrt.API.Controllers
 
         [Route("IzmeniLokaciju/{id}")]
         [HttpPost]
-        public async Task<IActionResult> UpisiLokaciju(int id, [FromBody] Lokacija lok)
+        public async Task<IActionResult> UpisiLokaciju(int id, [FromBody] LokacijaModel lokacija)
         {
             var zooVrt = await Context.ZooVrt
-                .FindAsync(id);
-            lok.ZooVrt = zooVrt;
+                .Include(x => x.Lokacije)
+                    .ThenInclude(x => x.Staniste)
+                .SingleOrDefaultAsync(x => x.Id == id);
 
-            if (Context.Lokacije.Any(p => p.Vrsta == lok.Vrsta && (p.X != lok.X || p.Y != lok.Y)))
-            {
-                var xy = Context.Lokacije.Where(p => p.Vrsta == lok.Vrsta).FirstOrDefault();
-                return BadRequest(new { xy?.X, xy?.Y });
-            }
+            var lok = _mapper.Map<Lokacija>(lokacija);
+            var staniste = await Context.TipoviStanista.FindAsync(lokacija.Staniste.Id);
+            lok.Staniste = staniste;
 
-            var thatLok = Context.Lokacije
-                .Where(p => p.X == lok.X && p.Y == lok.Y)
-                .FirstOrDefault();
-
-            if (thatLok != null)
-            {
-                if (thatLok.ZooVrt.Kapacitet < thatLok.Zbir + lok.Zbir)
-                {
-                    return StatusCode(406);
-                }
-                else if (thatLok.Vrsta != lok.Vrsta)
-                {
-                    return StatusCode(406);
-                }
-                else
-                {
-                    thatLok.Zbir += lok.Zbir;
-                    await Context.SaveChangesAsync();
-                    return Ok();
-                }
-            }
-
-            if ((thatLok != null && thatLok.Zbir == 0) || thatLok == null)
-            {
-                Context.Lokacije.Add(lok);
-                await Context.SaveChangesAsync();
-                return Ok();
-            }
-            else
+            if (zooVrt.M <= lokacija.X || zooVrt.N <= lokacija.Y)
             {
                 return StatusCode(406);
             }
+
+            Lokacija staraLokacija = zooVrt.Lokacije?.FirstOrDefault(x => x.X == lokacija.X && x.Y == lokacija.Y);
+
+            if(staraLokacija == null)
+            {
+                if(lokacija.Zbir > zooVrt.Kapacitet)
+                {
+                    return StatusCode(406);
+                }
+                if (zooVrt.Lokacije == null)
+                {
+                    zooVrt.Lokacije = new List<Lokacija>();
+                }
+                zooVrt.Lokacije.Add(lok);
+            }
+            else
+            {
+                if(staraLokacija.Zbir + lok.Zbir > zooVrt.Kapacitet || 
+                    staraLokacija.Vrsta != lok.Vrsta ||
+                    staraLokacija.StanisteId != lok.Staniste.Id)
+                {
+                    return StatusCode(406);
+                }
+                staraLokacija.Zbir += lok.Zbir;
+            }
+
+            await Context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }
