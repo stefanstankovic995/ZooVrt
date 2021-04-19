@@ -59,6 +59,15 @@ namespace ZooVrt.API.Controllers
             await Context.SaveChangesAsync();
         }
 
+        [Route("OcistiLokaciju/{id}")]
+        [HttpDelete]
+        public async Task DeleteLocation(int id)
+        {
+            var lok = await Context.Lokacije.FindAsync(id);
+            Context.Remove(lok);
+            await Context.SaveChangesAsync();
+        }
+
         [Route("IzmeniLokaciju/{id}")]
         [HttpPost]
         public async Task<IActionResult> UpisiLokaciju(int id, [FromBody] LokacijaModel lokacija)
@@ -104,7 +113,7 @@ namespace ZooVrt.API.Controllers
 
             await Context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(lok.Id);
         }
     }
 }

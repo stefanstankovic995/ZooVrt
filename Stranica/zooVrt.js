@@ -1,7 +1,7 @@
 import {Lokacija} from './lokacija.js';
 
 export class Zoo{
-	    constructor(zoo, tipoviStanista, refreshMethod) {
+	    constructor(zoo, tipoviStanista) {
         this.id = zoo.id;
         this.naziv = zoo.naziv;
         this.n = zoo.n;
@@ -15,7 +15,6 @@ export class Zoo{
 		});
 		this.tipoviStanista = tipoviStanista;
 		this.glavni = null;
-		this.refreshMethod = refreshMethod;
     }
 	
 	crtaj(host) {
@@ -29,7 +28,7 @@ export class Zoo{
 
         let glavni = document.createElement("div");
         glavni.className = "kontForma";
-        host.appendChild(glavni);
+        host.prepend(glavni);
 
         var labela = document.createElement("h3");
         labela.innerHTML = "Unos zivotinja";
@@ -110,15 +109,16 @@ export class Zoo{
         glavni.appendChild(dugme);
 
         dugme.onclick = (ev) => {
-            const vrstaZivotinje = this.glavni.querySelector(".vrsta").value;
-            const kolicina = parseInt(this.glavni.querySelector(".kolicina").value);
-            const staniste = this.glavni.querySelector(`input:checked`);
+            var vrstaZivotinje = this.glavni.querySelector(".vrsta").value;
+            var kolicina = parseInt(this.glavni.querySelector(".kolicina").value);
+            var staniste = this.glavni.querySelector(`input:checked`);
 			
             if (staniste == null)
                 alert("Molimo Vas izaberite tip stnaista");
 
             let x = parseInt(selX.value);
             let y = parseInt(selY.value);
+			let stan = { id: parseInt(staniste.value), naziv: staniste.name};
 			const lokId = this.lokacije[x][y].id;
         
             fetch("https://localhost:44348/ZooVrt/IzmeniLokaciju/" + this.id, {
@@ -130,24 +130,34 @@ export class Zoo{
 					id: lokId,
                     vrsta: vrstaZivotinje,
                     zbir: kolicina,
-                    staniste: { id: parseInt(staniste.value), naziv: staniste.name},
+                    staniste: stan,
                     x: x,
                     y: y,
 
                 })
-            }).then(p => {
+            }).then((p) => {
                 if (p.ok) {
-                    alert("Uspešno sacuvane izmene!");
-					this.refreshMethod();
+					return p.json();
                 }
                 else {
-                    alert("Greška prilikom upisa.");
+                    alert("Greška prilikom upisa ovde.");
                 }
-            }).catch(p => {
+            })
+			.then(id => {
+				this.lokacije[x][y].izmeni(parseInt(id), vrstaZivotinje,
+						kolicina, this.tipoviStanista.find(x => x.id == stan.id));
+				this.ocistiUnos();
+			})
+			.catch(p => {
                 alert("Greška prilikom upisa.");
             });
         }
     }
+	
+	ocistiUnos = () => {
+		this.glavni.firstChild.remove();
+		this.crtajFormu(this.glavni);
+	}
 
     crtajLokacije(host) {
         let glavni = document.createElement("div");

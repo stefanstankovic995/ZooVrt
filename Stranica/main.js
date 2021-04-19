@@ -9,7 +9,7 @@ const refreshData = () => {
 		fetch("https://localhost:44348/ZooVrt/").then(p => {
 			p.json().then(data => {
         data.forEach(zoo => {
-            const zooVrt = new Zoo(zoo, staniste, refreshData);
+            const zooVrt = new Zoo(zoo, staniste);
 			zooVrt.crtaj(document.body);
         });
     });
